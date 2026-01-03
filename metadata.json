@@ -1,0 +1,5 @@
+{
+  "name": "BillMinder",
+  "description": "A production-grade bill tracking and financial management application with subscription tiers and admin controls.",
+  "requestFramePermissions": []
+}
