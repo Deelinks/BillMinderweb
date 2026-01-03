@@ -53,12 +53,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const state = loadState();
     const user = state.users.find(u => u.email === email);
     if (user && user.isActive) {
-      // Mock password check
       const loggedUser = { ...user, lastLoginAt: new Date().toISOString() };
       setCurrentUser(loggedUser);
       localStorage.setItem('billminder_current_user', JSON.stringify(loggedUser));
       
-      // Update state lastLogin
       const userIndex = state.users.findIndex(u => u.id === user.id);
       state.users[userIndex] = loggedUser;
       saveState(state);
@@ -100,7 +98,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     saveState(state);
     addLog('SIGNUP', newUser.id, `User registered as ${newUser.role}`);
     
-    // Auto-login
     setCurrentUser(newUser);
     localStorage.setItem('billminder_current_user', JSON.stringify(newUser));
     return true;
@@ -124,7 +121,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode, requireAdmin?: boole
   }
 
   if (requireAdmin && !isAdmin) {
-    // Hidden requirement: redirect to 404 for security
     return <Navigate to="/404" replace />;
   }
 
@@ -135,7 +131,6 @@ const AdminRouteGuard: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const { currentUser, isAdmin } = useAuth();
   const { pathname } = useLocation();
 
-  // The admin slug must match the URL
   const slugInUrl = pathname.split('/').pop();
   const isCorrectSlug = isAdmin && currentUser?.adminSlug === slugInUrl;
 
@@ -168,7 +163,6 @@ const App: React.FC = () => {
             </ProtectedRoute>
           } />
 
-          {/* Secret Admin Route */}
           <Route path="/secure-admin/:slug" element={
             <AdminRouteGuard>
               <AdminDashboard />
